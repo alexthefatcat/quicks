@@ -1,0 +1,57 @@
+
+#change new_hirght to height
+chagne old_heihgt to hiegh_old
+
+    def image_resize(img, *, mode='cv2', ratio=None, new_height=None, new_width=None, return_ratio=False):
+        old_height, old_width, *bytesPerComponent = img.shape
+        
+        if ratio is not None:
+            assert (new_height is None) and (new_width is None)
+            new_width = round(old_width * ratio)
+            new_height = round(old_height * ratio)
+        else:
+            assert not ((new_height is None) and (new_width is None))
+            if new_height is None:
+                ratio = new_width/old_width 
+                new_height = round(old_height * ratio)                  
+            if new_width is None:
+                ratio = new_height/old_height 
+                new_width = round(old_width * ratio)  
+        size_new = (new_width, new_height)
+
+        if   mode == 'cv2':                
+           img = cv2.resize(img, size_new )
+        elif mode == 'pil':
+           from PIL import Image
+           import numpy as np
+           pimg = Image.fromarray(img)
+           pimg = pimg.resize(size_new )  
+           img = np.array(pimg)
+
+        if return_ratio:
+            return img, ratio
+        return img     
+
+
+
+
+
+def image_read(img_filepath, mode='pil'):
+    mode = mode.lower().replace(' ','')
+    assert mode in ('cv2','pil')
+    if   mode == 'cv2':    
+        import cv2
+        image = cv2.imread(img_filepath, 1)
+        img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    elif mode == 'pil':
+        from PIL import Image
+        import numpy as np
+        image_from_pil = Image.open(img_filepath).convert("RGB")
+        img = np.array(image_from_pil)
+    return img
+
+
+img0 = image_read(fp, mode='cv2')
+img1 = image_read(fp, mode='pil')
+
+

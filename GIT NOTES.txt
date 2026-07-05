@@ -1,0 +1,62 @@
+https://github.com/alexmilroyqq/quicks
+
+cd C:\Users\alexm\Desktop\QUICKS
+cd C:\Users\Alex\Desktop\QUICKS
+cd C:\Users\Alexm\Desktop\EasyImportPython\quicks_git\quicks
+??also right click open in termal??
+
+
+cd C:\Users\alexm\Desktop\QUICKS
+cd C:\Users\Alex\Desktop\QUICKS
+
+Dell XPS:-      cd C:\Users\Alexm\Desktop\EasyImportPython\quicks_git\quicks
+WorkGPULaptop:- *Use GitDesktop
+
+
+
+
+
+
+
+Search/Run:- GIT CMD
+cd to write locaiton
+
+git pull
+git commit -m "message"
+   git add *.*
+   git commit -m "message"
+git push
+
+
+git commit -a -m "message"
+you dont have to add updated files
+
+FivePcs:-DellXPS,HolidayLaptop,WorkGPUDEV2,WorkDEV1,MediaSystem
+
+check the above(1X,2,3,4,5)
+
+#############################################################
+#                   Extra Notes                             #
+#############################################################
+Dell-XPS:-
+
+-------------------------------------------------------------
+Work-Laptop:-
+   # wrangle indnedted tree to stuff
+   # pre data tasks
+   # create a windows library with only one file type pu searched through all folders
+   # running python code in matlab can you
+   # adding lots of rows into table
+   # convert indendt text to dataframe
+   # save csvs read
+   # quicks.quicks('stuff to search')
+   # quicks.search('stuff to search')
+-------------------------------------------------------------
+Small_Pc:-
+    extrenal hardrive is broke
+    quicks_read_csvs # format that has multiple tables
+    and add file size and modified stuff to get filenames
+-------------------------------------------------------------
+check for ui git 
+-------------------------------------------------------------
+

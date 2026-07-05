@@ -1,0 +1,53 @@
+def add_border_to_ndarray(arr, depth=1):
+    ndim = arr.ndim
+    padder = tuple([(depth, depth) for e in range(ndim)])
+    arr_out = np.pad(arr, padder, constant_values=False)# maybe contant_values can value in permiaters
+    return arr_out
+
+
+
+# save and load ndarray compresed
+import gzip
+import numpy
+
+f = gzip.GzipFile("my_array.npy.gz", "w")
+np.save(file=f, arr=my_array)
+f.close()
+
+f = gzip.GzipFile('file.npy.gz', "r"); np.load(f)
+
+f = gzip.GzipFile('file.npy.gz', "r")
+np.load(f)
+
+searcher
+
+
+# maybe change this for ndarray
+def add_spheres_to_volume(volume, spheres):
+    if isinstance(volume,(list, tuple)):
+        volume = np.zeros(volume, dtype='uint8')  
+    shape = volume.shape
+    x, y, z = np.indices(shape)
+    for radius, (cx, cy, cz) in spheres:
+        sphere = ((x - cx)**2 + (y - cy)**2 + (z - cz)**2) <= radius**2
+        volume = np.maximum(volume, sphere.astype('uint8'))# maybe change this
+    return volume
+
+#ndarray version
+def add_spheres_to_volume(volume, spheres):
+    if isinstance(volume,(list, tuple)):
+        volume = np.zeros(volume, dtype='uint8')  
+    shape = volume.shape
+    xyz = np.indices(shape)
+    for radius, cxyz in spheres:
+        sphere = np.sum([(a-b)**2 for a,b in zip(cxyz,xyz)],0) <= radius**2
+        volume = np.maximum(volume, sphere.astype('uint8'))# maybe change this
+    return volume
+
+
+
+p
+
+
+
+

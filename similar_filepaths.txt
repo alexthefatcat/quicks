@@ -1,0 +1,24 @@
+
+
+class SimilarFilepaths:
+   def __init__(self, filepathf, insert='{}', formatter):
+      self.filepathf = filepathf
+      self.filpaths = findfiles()
+   def next_number(self, return_no):
+   def first():
+   def last():
+   def __iter__():
+   def format = lambda x: str(x).ljust('0',x)
+   def exist
+
+
+      
+
+
+
+fp = "C:\Users\Alexm\Desktop\nn\yancetgarcia{}.png"
+similar_filepaths = SimilarFilepaths(fp)
+img.save(similar_filepaths.next)
+
+fpd = similar_filepaths(89)
+"C:\Users\Alexm\Desktop\nn\yancetgarcia89.png"

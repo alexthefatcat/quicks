@@ -1,0 +1,13 @@
+debugging_tools
+ was mean to be an importable tool
+where you can import LiveVariableOutput and live update a none crasshing ui 
+so you could live watch certain veraibels instead of relying on the console or i guess save them to text file?
+
+debugging_tools_test
+ has three parts 
+1) was to run the above and see if we could get it to work which we could not
+2) run to python bits of code at the same time and comunicate with one another; one is main another is a sought os flave process that can do things in parrelel
+3) which worked a bit shit a ui version of input
+
+
+

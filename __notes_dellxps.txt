@@ -1,0 +1,6 @@
+indian jones
+
+def sort_files(files):
+   return sorted(files, key = lambda f: f.rsplit('\\'))
+
+files = sort_files(files)

@@ -1,0 +1,38 @@
+#  import quick# prints all files 
+#  quick.search('decorator') list the info related to this
+#  quicks# which prints out modules and sub modules
+#  quick_examples; image - add grid lines
+
+quick_string
+quick_split
+quick_image
+   normalize
+   concat
+   imshow given multiple images
+   *gallery
+quick_examples
+   text passag shaspere?
+   dict
+   nested object
+quick_files
+   identical_files_grouper
+quick_ui
+   searcher-csv
+   searcher-dict/json?
+   text?
+   gallery
+   image_points/draw
+   function
+   pythonrunner?
+TESTS/unit-tests
+
+
+maybe add jobs
+jobs would be more spacific but some times useful
+job_get_filenames_in_folder_nice_strucutre ?
+maybe each quick includes examples which is a string text the functions
+
+add searcher??
+and
+quick_library_function # hidden but hug list of bespoke funcitons, like copy image filepath to clipbaord
+have folder added here called library and contains a bunch of small function fules

@@ -1,0 +1,45 @@
+def constrainValue(value, maxvalue, minvalue, mode='limits', return_region):
+   return_regions = (-1, 0, +1) # 0 being insideregion
+   assert mode in ('limits', 'deflection')
+   assert minvalue<maxvalue
+
+   if   value<minvalue:
+      region = -1
+   elif value>maxvalue:
+      region = -1
+   else:
+      region = 0
+      return value
+
+   if mode == 'limits':
+      return sorted(value, maxvalue, minvalue)[1]
+   if mode == 'deflection':
+      if region 
+
+
+
+iteration = 0.001
+
+def display_ball(ball_loc):
+   pass
+
+def calc_next_loc(ball_loc, ball_vel, iteration=iteration):
+   ball_loc = (ball_loc[0]+(iteration*ball_vel[0]),  ball_loc[1]+(iteration*ball_vel[1]))
+   return 
+
+
+ball_loc = [1, 2]
+ball_vel = [0.2, 0.8]
+
+x_lim = (0, 10)
+y_lim = (-5, 5)
+
+for n in range(10):
+   next_loc = list(calc_next_loc(ball_loc, ball_vel))
+   next_loc[0], region = constrainValue(next_loc[0], x_lim[0], x_lim[1],'deflection',True)
+   if region !=0:
+      ball_vel[0] = -ball_vel[0]
+   next_loc[1], region = constrainValue(next_loc[1], y_lim[0], y_lim[1],'deflection',True)
+   if region !=0:
+      ball_vel[1] = -ball_vel[1]
+   display_ball(ball_loc)
