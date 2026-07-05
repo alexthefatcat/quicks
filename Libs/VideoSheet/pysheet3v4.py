@@ -41,9 +41,9 @@ move to git, update git, then try git on the other machine
 
 """
 
-# from utils_pysheet3v4 import tryify, , py_filepath_info, find_unused_filepath
-from utils_pysheet3v4 import Popen2, cut,  ImageConcat, batcher, hash_file, get_drive_info, save_pil_image_with_metadata, read_pil_image_with_metadata as _read_pil_image_with_metadata
-from utils_pysheet3v4 import colors, multiply_lists, get_todays_date, filepaths_date
+# from .utils_pysheet3v4 import tryify, , py_filepath_info, find_unused_filepath
+from .utils_pysheet3v4 import Popen2, cut,  ImageConcat, batcher, hash_file, get_drive_info, save_pil_image_with_metadata, read_pil_image_with_metadata as _read_pil_image_with_metadata
+from .utils_pysheet3v4 import colors, multiply_lists, get_todays_date, filepaths_date
 
 from PIL import Image, ImageDraw, ImageFont, ImageChops # pillow
 import PIL
@@ -118,8 +118,12 @@ class Video: # Facade
     @staticmethod    
     def getFrameAt(fp, seektime=0):
         timestring = Video.convertTime(int(seektime))
-        command_frame = ["ffmpeg","-ss",timestring,"-i",fp,"-f","image2","-frames:v","1","-c:v","png","-loglevel","8","-"]
-        pout, error = Popen2(command_frame)
+        
+        command_frame = ["ffmpeg","-ss",timestring,"-i",fp,"-f","image2","-frames:v","1","-c:v","png","-loglevel","8","-"]        
+        try:
+            pout, error = Popen2(command_frame)
+        except Exception as e:
+            raise Exception("FFmpeg is missing or could not be executed") from e
         return Image.open( BytesIO(pout) )   
 
     @staticmethod
