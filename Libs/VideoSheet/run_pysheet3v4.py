@@ -13,7 +13,7 @@ from pysheet3v4 import VideoSheet
 
 
 #2026
-if True:
+if False:
     filename = r"C:\Users\Alexm\Desktop\AV\MD new, tnshd - 9395 Mini Diva Homemade Sextape.mp4"
     folder_out = r"C:\Users\Alexm\Desktop\pyVideoSheets3\out"
     videosheet = VideoSheet()
@@ -21,9 +21,41 @@ if True:
     videosheet_fp = videosheet.filename_videosheet_out
     img, mdata = videosheet.read_pil_image_with_metadata(videosheet_fp) 
     info = videosheet.infos[0]
+else:
+    filepaths = (   r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A Alice BTS Biker Shop 2.mp4",
+                    r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A alice.mp4",
+                    r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A Hustler XXX Video 11.avi",
+                    r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A Superfuckers_21_Scene_2.mp4",
+                    r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A_TD Hustler Casting Couch 7 - Alice and Tiffany Diamond.mkv",
+                    r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A_TD Hustler Casting Couch 7 - Alice.avi")
+    
+    folder_out = r"C:\Users\Alexm\Desktop\pyVideoSheets3\out"
+    for filepath in filepaths:
+        videosheet = VideoSheet()
+        videosheet.create( filepath, folder_out)
+        videosheet_fp = videosheet.filename_videosheet_out
+        print(videosheet_fp)
+    img, mdata = videosheet.read_pil_image_with_metadata(videosheet_fp) 
+    info = videosheet.infos[0]                        
+        
     
     
-    #images = imgs_nlis
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 assert False
 

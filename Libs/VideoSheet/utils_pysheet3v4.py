@@ -95,7 +95,8 @@ def batcher(container,ngroups):
         yield container[row:min(row+ngroups, lcontainer)]
 
 
-def hash_file(filename, parts = 60, seg_len = 2_000_000):
+def hash_file_old(filename, parts = 60, seg_len = 2_000_000):
+    #below has new gemin corrected code
     '''
     Parameters
     ----------
@@ -137,6 +138,52 @@ def hash_file(filename, parts = 60, seg_len = 2_000_000):
             hasher.update(data_small)
     out = hasher.hexdigest()
     return out
+
+
+def hash_file(filename, parts=60, seg_len=2_000_000):
+    #gemenia code
+    """
+    Calculates a SHA-256 hash of a file.
+    
+    Parameters
+    ----------
+    filename : str
+        Filepath of the file to hash.
+    parts : int
+        Number of segments to read if the file is large.
+    seg_len : int
+        Length of each segment in bytes.
+        
+    Returns
+    -------
+    out : str
+        Hexadecimal hash string.
+    """
+    import os, hashlib
+    size = os.path.getsize(filename)
+    hasher = hashlib.sha256()
+    
+    # Open the file exactly once
+    with open(filename, mode='rb') as fin:
+        if size <= parts * seg_len:
+            # File is small enough: hash the whole thing
+            # We read in chunks to keep memory usage low and safe
+            for chunk in iter(lambda: fin.read(seg_len), b''):
+                hasher.update(chunk)
+        else:
+            # File is large: hash evenly spaced segments
+            # Calculate the empty space between each segment
+            gap = (size - (parts * seg_len)) / (parts - 1)
+            
+            for i in range(parts):
+                # Calculate the exact starting byte for this segment
+                start = int(i * (seg_len + gap))
+                fin.seek(start)
+                
+                data_small = fin.read(seg_len)
+                hasher.update(data_small)
+                
+    return hasher.hexdigest()
 
 
 def get_drive_info(filepath):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Created on Sat Dec 11 22:48:17 2021@author: Alexm
+r"""Created on Sat Dec 11 22:48:17 2021@author: Alexm
 
 
 
@@ -37,7 +37,12 @@ move to git, update git, then try git on the other machine
 
 
 
+this file is not working problem with hash
+r"C:\Users\Alexm\Desktop\AV\_Downloaded\Alice\A alice.mp4",
 
+
+this appears in the info attached to the jpeg daved appears ok in videosheet image
+Middle Image Pixel Loc: Middle Image Pixel Loc: (608, 520, 908, 720)
 
 """
 
@@ -191,9 +196,11 @@ class Video: # Facade
 class Sheet:
     def __init__(self, video):
         fontfile = "Cabin-Regular-TTF.ttf"
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        font_filepath = os.path.join(base_dir, "Cabin-Regular-TTF.ttf")
         self.default_settings = dict(
-                font = ImageFont.truetype(fontfile, 15),
-                font_small = ImageFont.truetype(fontfile, 10),
+                font = ImageFont.truetype(font_filepath, 15),
+                font_small = ImageFont.truetype(font_filepath, 10),
                 backgroundColour = colors.beige,
                 textColour = colors.black,
                 headerSize = 110,

@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Created on Sun Nov 19 16:53:28 2023@author: alexm"""
+"""
+from quick_example import image, film_df, country_df, pokemon_df, func_nth_prime, generator_prime_numbers, text, small_text, long_text
+from quick_example import image
+from quick_example import film_df, country_df, pokemon_df
+from quick_example import text
+
+
+Created on Sun Nov 19 16:53:28 2023@author: alexm"""
+
 from io import StringIO
 import pandas as pd
+
 
 def __create_image():
     import numpy as np
@@ -69,18 +78,11 @@ def __create_image():
                     a = max(0,(60-abs(j-10))/60)+max(0,(60-abs(j-190))/40)
                     b = max(0,(60-abs(j-70))/60) 
                     c = max(0,(60-abs(j-130))/60)
-                    img[i,j,:] = (a,b,c)
-                    
+                    img[i,j,:] = (a,b,c)            
     return img
 
 
-
-
- 
-
- 
 def __create_dataframe():
-    import pandas as pd
     csv_str = ''',Film,Genre,Lead Studio,Audience score %,Profitability,Rotten Tomatoes %,Worldwide Gross,Year,SEEN_(checkbox)
     0,Zack and Miri Make a Porno,Romance,The Weinstein Company,70,1.747541667,64,$41.94 ,2008,X
     1,Youth in Revolt,Comedy,The Weinstein Company,52,1.09,68,$19.62 ,2010,
@@ -164,8 +166,8 @@ def __create_dataframe():
     df.iloc[:,-1] = df.iloc[:,-1].fillna('')
     return df
 
-def __create_dataframe2():
-    import pandas as pd    
+
+def __create_dataframe2():   
     csv_str ='''Country,Population(M)[int],GDP(MUSD)[int],CapitalCity,Area(KM2)[int]
     China,1_425,14_309_000,Beijing,9_596_961
     India,1_425,3_202_000,New Delhi,3_287_263
@@ -240,8 +242,564 @@ def __create_dataframe2():
     return df
 
 
+def __create_dataframe3():
+    csv_str = '''Name 	Type 1 	Type 2 	Total 	HP 	Attack 	Defense 	Sp. Atk 	Sp. Def 	Speed 	Generation 	Legendary
+    1 	Bulbasaur 	Grass 	Poison 	318 	45 	49 	49 	65 	65 	45 	1 	False
+    2 	Ivysaur 	Grass 	Poison 	405 	60 	62 	63 	80 	80 	60 	1 	False
+    3 	Venusaur 	Grass 	Poison 	525 	80 	82 	83 	100 	100 	80 	1 	False
+    3 	VenusaurMega Venusaur 	Grass 	Poison 	625 	80 	100 	123 	122 	120 	80 	1 	False
+    4 	Charmander 	Fire 		309 	39 	52 	43 	60 	50 	65 	1 	False
+    5 	Charmeleon 	Fire 		405 	58 	64 	58 	80 	65 	80 	1 	False
+    6 	Charizard 	Fire 	Flying 	534 	78 	84 	78 	109 	85 	100 	1 	False
+    6 	CharizardMega Charizard X 	Fire 	Dragon 	634 	78 	130 	111 	130 	85 	100 	1 	False
+    6 	CharizardMega Charizard Y 	Fire 	Flying 	634 	78 	104 	78 	159 	115 	100 	1 	False
+    7 	Squirtle 	Water 		314 	44 	48 	65 	50 	64 	43 	1 	False
+    8 	Wartortle 	Water 		405 	59 	63 	80 	65 	80 	58 	1 	False
+    9 	Blastoise 	Water 		530 	79 	83 	100 	85 	105 	78 	1 	False
+    9 	BlastoiseMega Blastoise 	Water 		630 	79 	103 	120 	135 	115 	78 	1 	False
+    10 	Caterpie 	Bug 		195 	45 	30 	35 	20 	20 	45 	1 	False
+    11 	Metapod 	Bug 		205 	50 	20 	55 	25 	25 	30 	1 	False
+    12 	Butterfree 	Bug 	Flying 	395 	60 	45 	50 	90 	80 	70 	1 	False
+    13 	Weedle 	Bug 	Poison 	195 	40 	35 	30 	20 	20 	50 	1 	False
+    14 	Kakuna 	Bug 	Poison 	205 	45 	25 	50 	25 	25 	35 	1 	False
+    15 	Beedrill 	Bug 	Poison 	395 	65 	90 	40 	45 	80 	75 	1 	False
+    15 	BeedrillMega Beedrill 	Bug 	Poison 	495 	65 	150 	40 	15 	80 	145 	1 	False
+    16 	Pidgey 	Normal 	Flying 	251 	40 	45 	40 	35 	35 	56 	1 	False
+    17 	Pidgeotto 	Normal 	Flying 	349 	63 	60 	55 	50 	50 	71 	1 	False
+    18 	Pidgeot 	Normal 	Flying 	479 	83 	80 	75 	70 	70 	101 	1 	False
+    18 	PidgeotMega Pidgeot 	Normal 	Flying 	579 	83 	80 	80 	135 	80 	121 	1 	False
+    19 	Rattata 	Normal 		253 	30 	56 	35 	25 	35 	72 	1 	False
+    20 	Raticate 	Normal 		413 	55 	81 	60 	50 	70 	97 	1 	False
+    21 	Spearow 	Normal 	Flying 	262 	40 	60 	30 	31 	31 	70 	1 	False
+    22 	Fearow 	Normal 	Flying 	442 	65 	90 	65 	61 	61 	100 	1 	False
+    23 	Ekans 	Poison 		288 	35 	60 	44 	40 	54 	55 	1 	False
+    24 	Arbok 	Poison 		438 	60 	85 	69 	65 	79 	80 	1 	False
+    25 	Pikachu 	Electric 		320 	35 	55 	40 	50 	50 	90 	1 	False
+    26 	Raichu 	Electric 		485 	60 	90 	55 	90 	80 	110 	1 	False
+    27 	Sandshrew 	Ground 		300 	50 	75 	85 	20 	30 	40 	1 	False
+    28 	Sandslash 	Ground 		450 	75 	100 	110 	45 	55 	65 	1 	False
+    29 	Nidoran♀ 	Poison 		275 	55 	47 	52 	40 	40 	41 	1 	False
+    30 	Nidorina 	Poison 		365 	70 	62 	67 	55 	55 	56 	1 	False
+    31 	Nidoqueen 	Poison 	Ground 	505 	90 	92 	87 	75 	85 	76 	1 	False
+    32 	Nidoran♂ 	Poison 		273 	46 	57 	40 	40 	40 	50 	1 	False
+    33 	Nidorino 	Poison 		365 	61 	72 	57 	55 	55 	65 	1 	False
+    34 	Nidoking 	Poison 	Ground 	505 	81 	102 	77 	85 	75 	85 	1 	False
+    35 	Clefairy 	Fairy 		323 	70 	45 	48 	60 	65 	35 	1 	False
+    36 	Clefable 	Fairy 		483 	95 	70 	73 	95 	90 	60 	1 	False
+    37 	Vulpix 	Fire 		299 	38 	41 	40 	50 	65 	65 	1 	False
+    38 	Ninetales 	Fire 		505 	73 	76 	75 	81 	100 	100 	1 	False
+    39 	Jigglypuff 	Normal 	Fairy 	270 	115 	45 	20 	45 	25 	20 	1 	False
+    40 	Wigglytuff 	Normal 	Fairy 	435 	140 	70 	45 	85 	50 	45 	1 	False
+    41 	Zubat 	Poison 	Flying 	245 	40 	45 	35 	30 	40 	55 	1 	False
+    42 	Golbat 	Poison 	Flying 	455 	75 	80 	70 	65 	75 	90 	1 	False
+    43 	Oddish 	Grass 	Poison 	320 	45 	50 	55 	75 	65 	30 	1 	False
+    44 	Gloom 	Grass 	Poison 	395 	60 	65 	70 	85 	75 	40 	1 	False
+    45 	Vileplume 	Grass 	Poison 	490 	75 	80 	85 	110 	90 	50 	1 	False
+    46 	Paras 	Bug 	Grass 	285 	35 	70 	55 	45 	55 	25 	1 	False
+    47 	Parasect 	Bug 	Grass 	405 	60 	95 	80 	60 	80 	30 	1 	False
+    48 	Venonat 	Bug 	Poison 	305 	60 	55 	50 	40 	55 	45 	1 	False
+    49 	Venomoth 	Bug 	Poison 	450 	70 	65 	60 	90 	75 	90 	1 	False
+    50 	Diglett 	Ground 		265 	10 	55 	25 	35 	45 	95 	1 	False
+    51 	Dugtrio 	Ground 		405 	35 	80 	50 	50 	70 	120 	1 	False
+    52 	Meowth 	Normal 		290 	40 	45 	35 	40 	40 	90 	1 	False
+    53 	Persian 	Normal 		440 	65 	70 	60 	65 	65 	115 	1 	False
+    54 	Psyduck 	Water 		320 	50 	52 	48 	65 	50 	55 	1 	False
+    55 	Golduck 	Water 		500 	80 	82 	78 	95 	80 	85 	1 	False
+    56 	Mankey 	Fighting 		305 	40 	80 	35 	35 	45 	70 	1 	False
+    57 	Primeape 	Fighting 		455 	65 	105 	60 	60 	70 	95 	1 	False
+    58 	Growlithe 	Fire 		350 	55 	70 	45 	70 	50 	60 	1 	False
+    59 	Arcanine 	Fire 		555 	90 	110 	80 	100 	80 	95 	1 	False
+    60 	Poliwag 	Water 		300 	40 	50 	40 	40 	40 	90 	1 	False
+    61 	Poliwhirl 	Water 		385 	65 	65 	65 	50 	50 	90 	1 	False
+    62 	Poliwrath 	Water 	Fighting 	510 	90 	95 	95 	70 	90 	70 	1 	False
+    63 	Abra 	Psychic 		310 	25 	20 	15 	105 	55 	90 	1 	False
+    64 	Kadabra 	Psychic 		400 	40 	35 	30 	120 	70 	105 	1 	False
+    65 	Alakazam 	Psychic 		500 	55 	50 	45 	135 	95 	120 	1 	False
+    65 	AlakazamMega Alakazam 	Psychic 		590 	55 	50 	65 	175 	95 	150 	1 	False
+    66 	Machop 	Fighting 		305 	70 	80 	50 	35 	35 	35 	1 	False
+    67 	Machoke 	Fighting 		405 	80 	100 	70 	50 	60 	45 	1 	False
+    68 	Machamp 	Fighting 		505 	90 	130 	80 	65 	85 	55 	1 	False
+    69 	Bellsprout 	Grass 	Poison 	300 	50 	75 	35 	70 	30 	40 	1 	False
+    70 	Weepinbell 	Grass 	Poison 	390 	65 	90 	50 	85 	45 	55 	1 	False
+    71 	Victreebel 	Grass 	Poison 	490 	80 	105 	65 	100 	70 	70 	1 	False
+    72 	Tentacool 	Water 	Poison 	335 	40 	40 	35 	50 	100 	70 	1 	False
+    73 	Tentacruel 	Water 	Poison 	515 	80 	70 	65 	80 	120 	100 	1 	False
+    74 	Geodude 	Rock 	Ground 	300 	40 	80 	100 	30 	30 	20 	1 	False
+    75 	Graveler 	Rock 	Ground 	390 	55 	95 	115 	45 	45 	35 	1 	False
+    76 	Golem 	Rock 	Ground 	495 	80 	120 	130 	55 	65 	45 	1 	False
+    77 	Ponyta 	Fire 		410 	50 	85 	55 	65 	65 	90 	1 	False
+    78 	Rapidash 	Fire 		500 	65 	100 	70 	80 	80 	105 	1 	False
+    79 	Slowpoke 	Water 	Psychic 	315 	90 	65 	65 	40 	40 	15 	1 	False
+    80 	Slowbro 	Water 	Psychic 	490 	95 	75 	110 	100 	80 	30 	1 	False
+    80 	SlowbroMega Slowbro 	Water 	Psychic 	590 	95 	75 	180 	130 	80 	30 	1 	False
+    81 	Magnemite 	Electric 	Steel 	325 	25 	35 	70 	95 	55 	45 	1 	False
+    82 	Magneton 	Electric 	Steel 	465 	50 	60 	95 	120 	70 	70 	1 	False
+    83 	Farfetch'd 	Normal 	Flying 	352 	52 	65 	55 	58 	62 	60 	1 	False
+    84 	Doduo 	Normal 	Flying 	310 	35 	85 	45 	35 	35 	75 	1 	False
+    85 	Dodrio 	Normal 	Flying 	460 	60 	110 	70 	60 	60 	100 	1 	False
+    86 	Seel 	Water 		325 	65 	45 	55 	45 	70 	45 	1 	False
+    87 	Dewgong 	Water 	Ice 	475 	90 	70 	80 	70 	95 	70 	1 	False
+    88 	Grimer 	Poison 		325 	80 	80 	50 	40 	50 	25 	1 	False
+    89 	Muk 	Poison 		500 	105 	105 	75 	65 	100 	50 	1 	False
+    90 	Shellder 	Water 		305 	30 	65 	100 	45 	25 	40 	1 	False
+    91 	Cloyster 	Water 	Ice 	525 	50 	95 	180 	85 	45 	70 	1 	False
+    92 	Gastly 	Ghost 	Poison 	310 	30 	35 	30 	100 	35 	80 	1 	False
+    93 	Haunter 	Ghost 	Poison 	405 	45 	50 	45 	115 	55 	95 	1 	False
+    94 	Gengar 	Ghost 	Poison 	500 	60 	65 	60 	130 	75 	110 	1 	False
+    94 	GengarMega Gengar 	Ghost 	Poison 	600 	60 	65 	80 	170 	95 	130 	1 	False
+    95 	Onix 	Rock 	Ground 	385 	35 	45 	160 	30 	45 	70 	1 	False
+    96 	Drowzee 	Psychic 		328 	60 	48 	45 	43 	90 	42 	1 	False
+    97 	Hypno 	Psychic 		483 	85 	73 	70 	73 	115 	67 	1 	False
+    98 	Krabby 	Water 		325 	30 	105 	90 	25 	25 	50 	1 	False
+    99 	Kingler 	Water 		475 	55 	130 	115 	50 	50 	75 	1 	False
+    100 	Voltorb 	Electric 		330 	40 	30 	50 	55 	55 	100 	1 	False
+    101 	Electrode 	Electric 		480 	60 	50 	70 	80 	80 	140 	1 	False
+    102 	Exeggcute 	Grass 	Psychic 	325 	60 	40 	80 	60 	45 	40 	1 	False
+    103 	Exeggutor 	Grass 	Psychic 	520 	95 	95 	85 	125 	65 	55 	1 	False
+    104 	Cubone 	Ground 		320 	50 	50 	95 	40 	50 	35 	1 	False
+    105 	Marowak 	Ground 		425 	60 	80 	110 	50 	80 	45 	1 	False
+    106 	Hitmonlee 	Fighting 		455 	50 	120 	53 	35 	110 	87 	1 	False
+    107 	Hitmonchan 	Fighting 		455 	50 	105 	79 	35 	110 	76 	1 	False
+    108 	Lickitung 	Normal 		385 	90 	55 	75 	60 	75 	30 	1 	False
+    109 	Koffing 	Poison 		340 	40 	65 	95 	60 	45 	35 	1 	False
+    110 	Weezing 	Poison 		490 	65 	90 	120 	85 	70 	60 	1 	False
+    111 	Rhyhorn 	Ground 	Rock 	345 	80 	85 	95 	30 	30 	25 	1 	False
+    112 	Rhydon 	Ground 	Rock 	485 	105 	130 	120 	45 	45 	40 	1 	False
+    113 	Chansey 	Normal 		450 	250 	5 	5 	35 	105 	50 	1 	False
+    114 	Tangela 	Grass 		435 	65 	55 	115 	100 	40 	60 	1 	False
+    115 	Kangaskhan 	Normal 		490 	105 	95 	80 	40 	80 	90 	1 	False
+    115 	KangaskhanMega Kangaskhan 	Normal 		590 	105 	125 	100 	60 	100 	100 	1 	False
+    116 	Horsea 	Water 		295 	30 	40 	70 	70 	25 	60 	1 	False
+    117 	Seadra 	Water 		440 	55 	65 	95 	95 	45 	85 	1 	False
+    118 	Goldeen 	Water 		320 	45 	67 	60 	35 	50 	63 	1 	False
+    119 	Seaking 	Water 		450 	80 	92 	65 	65 	80 	68 	1 	False
+    120 	Staryu 	Water 		340 	30 	45 	55 	70 	55 	85 	1 	False
+    121 	Starmie 	Water 	Psychic 	520 	60 	75 	85 	100 	85 	115 	1 	False
+    122 	Mr. Mime 	Psychic 	Fairy 	460 	40 	45 	65 	100 	120 	90 	1 	False
+    123 	Scyther 	Bug 	Flying 	500 	70 	110 	80 	55 	80 	105 	1 	False
+    124 	Jynx 	Ice 	Psychic 	455 	65 	50 	35 	115 	95 	95 	1 	False
+    125 	Electabuzz 	Electric 		490 	65 	83 	57 	95 	85 	105 	1 	False
+    126 	Magmar 	Fire 		495 	65 	95 	57 	100 	85 	93 	1 	False
+    127 	Pinsir 	Bug 		500 	65 	125 	100 	55 	70 	85 	1 	False
+    127 	PinsirMega Pinsir 	Bug 	Flying 	600 	65 	155 	120 	65 	90 	105 	1 	False
+    128 	Tauros 	Normal 		490 	75 	100 	95 	40 	70 	110 	1 	False
+    129 	Magikarp 	Water 		200 	20 	10 	55 	15 	20 	80 	1 	False
+    130 	Gyarados 	Water 	Flying 	540 	95 	125 	79 	60 	100 	81 	1 	False
+    130 	GyaradosMega Gyarados 	Water 	Dark 	640 	95 	155 	109 	70 	130 	81 	1 	False
+    131 	Lapras 	Water 	Ice 	535 	130 	85 	80 	85 	95 	60 	1 	False
+    132 	Ditto 	Normal 		288 	48 	48 	48 	48 	48 	48 	1 	False
+    133 	Eevee 	Normal 		325 	55 	55 	50 	45 	65 	55 	1 	False
+    134 	Vaporeon 	Water 		525 	130 	65 	60 	110 	95 	65 	1 	False
+    135 	Jolteon 	Electric 		525 	65 	65 	60 	110 	95 	130 	1 	False
+    136 	Flareon 	Fire 		525 	65 	130 	60 	95 	110 	65 	1 	False
+    137 	Porygon 	Normal 		395 	65 	60 	70 	85 	75 	40 	1 	False
+    138 	Omanyte 	Rock 	Water 	355 	35 	40 	100 	90 	55 	35 	1 	False
+    139 	Omastar 	Rock 	Water 	495 	70 	60 	125 	115 	70 	55 	1 	False
+    140 	Kabuto 	Rock 	Water 	355 	30 	80 	90 	55 	45 	55 	1 	False
+    141 	Kabutops 	Rock 	Water 	495 	60 	115 	105 	65 	70 	80 	1 	False
+    142 	Aerodactyl 	Rock 	Flying 	515 	80 	105 	65 	60 	75 	130 	1 	False
+    142 	AerodactylMega Aerodactyl 	Rock 	Flying 	615 	80 	135 	85 	70 	95 	150 	1 	False
+    143 	Snorlax 	Normal 		540 	160 	110 	65 	65 	110 	30 	1 	False
+    144 	Articuno 	Ice 	Flying 	580 	90 	85 	100 	95 	125 	85 	1 	True
+    145 	Zapdos 	Electric 	Flying 	580 	90 	90 	85 	125 	90 	100 	1 	True
+    146 	Moltres 	Fire 	Flying 	580 	90 	100 	90 	125 	85 	90 	1 	True
+    147 	Dratini 	Dragon 		300 	41 	64 	45 	50 	50 	50 	1 	False
+    148 	Dragonair 	Dragon 		420 	61 	84 	65 	70 	70 	70 	1 	False
+    149 	Dragonite 	Dragon 	Flying 	600 	91 	134 	95 	100 	100 	80 	1 	False
+    150 	Mewtwo 	Psychic 		680 	106 	110 	90 	154 	90 	130 	1 	True
+    150 	MewtwoMega Mewtwo X 	Psychic 	Fighting 	780 	106 	190 	100 	154 	100 	130 	1 	True
+    150 	MewtwoMega Mewtwo Y 	Psychic 		780 	106 	150 	70 	194 	120 	140 	1 	True
+    151 	Mew 	Psychic 		600 	100 	100 	100 	100 	100 	100 	1 	False
+    152 	Chikorita 	Grass 		318 	45 	49 	65 	49 	65 	45 	2 	False
+    153 	Bayleef 	Grass 		405 	60 	62 	80 	63 	80 	60 	2 	False
+    154 	Meganium 	Grass 		525 	80 	82 	100 	83 	100 	80 	2 	False
+    155 	Cyndaquil 	Fire 		309 	39 	52 	43 	60 	50 	65 	2 	False
+    156 	Quilava 	Fire 		405 	58 	64 	58 	80 	65 	80 	2 	False
+    157 	Typhlosion 	Fire 		534 	78 	84 	78 	109 	85 	100 	2 	False
+    158 	Totodile 	Water 		314 	50 	65 	64 	44 	48 	43 	2 	False
+    159 	Croconaw 	Water 		405 	65 	80 	80 	59 	63 	58 	2 	False
+    160 	Feraligatr 	Water 		530 	85 	105 	100 	79 	83 	78 	2 	False
+    161 	Sentret 	Normal 		215 	35 	46 	34 	35 	45 	20 	2 	False
+    162 	Furret 	Normal 		415 	85 	76 	64 	45 	55 	90 	2 	False
+    163 	Hoothoot 	Normal 	Flying 	262 	60 	30 	30 	36 	56 	50 	2 	False
+    164 	Noctowl 	Normal 	Flying 	442 	100 	50 	50 	76 	96 	70 	2 	False
+    165 	Ledyba 	Bug 	Flying 	265 	40 	20 	30 	40 	80 	55 	2 	False
+    166 	Ledian 	Bug 	Flying 	390 	55 	35 	50 	55 	110 	85 	2 	False
+    167 	Spinarak 	Bug 	Poison 	250 	40 	60 	40 	40 	40 	30 	2 	False
+    168 	Ariados 	Bug 	Poison 	390 	70 	90 	70 	60 	60 	40 	2 	False
+    169 	Crobat 	Poison 	Flying 	535 	85 	90 	80 	70 	80 	130 	2 	False
+    170 	Chinchou 	Water 	Electric 	330 	75 	38 	38 	56 	56 	67 	2 	False
+    171 	Lanturn 	Water 	Electric 	460 	125 	58 	58 	76 	76 	67 	2 	False
+    172 	Pichu 	Electric 		205 	20 	40 	15 	35 	35 	60 	2 	False
+    173 	Cleffa 	Fairy 		218 	50 	25 	28 	45 	55 	15 	2 	False
+    174 	Igglybuff 	Normal 	Fairy 	210 	90 	30 	15 	40 	20 	15 	2 	False
+    175 	Togepi 	Fairy 		245 	35 	20 	65 	40 	65 	20 	2 	False
+    176 	Togetic 	Fairy 	Flying 	405 	55 	40 	85 	80 	105 	40 	2 	False
+    177 	Natu 	Psychic 	Flying 	320 	40 	50 	45 	70 	45 	70 	2 	False
+    178 	Xatu 	Psychic 	Flying 	470 	65 	75 	70 	95 	70 	95 	2 	False
+    179 	Mareep 	Electric 		280 	55 	40 	40 	65 	45 	35 	2 	False
+    180 	Flaaffy 	Electric 		365 	70 	55 	55 	80 	60 	45 	2 	False
+    181 	Ampharos 	Electric 		510 	90 	75 	85 	115 	90 	55 	2 	False
+    181 	AmpharosMega Ampharos 	Electric 	Dragon 	610 	90 	95 	105 	165 	110 	45 	2 	False
+    182 	Bellossom 	Grass 		490 	75 	80 	95 	90 	100 	50 	2 	False
+    183 	Marill 	Water 	Fairy 	250 	70 	20 	50 	20 	50 	40 	2 	False
+    184 	Azumarill 	Water 	Fairy 	420 	100 	50 	80 	60 	80 	50 	2 	False
+    185 	Sudowoodo 	Rock 		410 	70 	100 	115 	30 	65 	30 	2 	False
+    186 	Politoed 	Water 		500 	90 	75 	75 	90 	100 	70 	2 	False
+    187 	Hoppip 	Grass 	Flying 	250 	35 	35 	40 	35 	55 	50 	2 	False
+    188 	Skiploom 	Grass 	Flying 	340 	55 	45 	50 	45 	65 	80 	2 	False
+    189 	Jumpluff 	Grass 	Flying 	460 	75 	55 	70 	55 	95 	110 	2 	False
+    190 	Aipom 	Normal 		360 	55 	70 	55 	40 	55 	85 	2 	False
+    191 	Sunkern 	Grass 		180 	30 	30 	30 	30 	30 	30 	2 	False
+    192 	Sunflora 	Grass 		425 	75 	75 	55 	105 	85 	30 	2 	False
+    193 	Yanma 	Bug 	Flying 	390 	65 	65 	45 	75 	45 	95 	2 	False
+    194 	Wooper 	Water 	Ground 	210 	55 	45 	45 	25 	25 	15 	2 	False
+    195 	Quagsire 	Water 	Ground 	430 	95 	85 	85 	65 	65 	35 	2 	False
+    196 	Espeon 	Psychic 		525 	65 	65 	60 	130 	95 	110 	2 	False
+    197 	Umbreon 	Dark 		525 	95 	65 	110 	60 	130 	65 	2 	False
+    198 	Murkrow 	Dark 	Flying 	405 	60 	85 	42 	85 	42 	91 	2 	False
+    199 	Slowking 	Water 	Psychic 	490 	95 	75 	80 	100 	110 	30 	2 	False
+    200 	Misdreavus 	Ghost 		435 	60 	60 	60 	85 	85 	85 	2 	False '''    
+    df = pd.read_csv(StringIO(csv_str),sep='\t')
+    #df.iloc[:,-1] = df.iloc[:,-1].fillna('')
+    return df
+
+
+def create_fileinfo_df(nrows=1231):
+    rows = []
+    for i in range(nrows):
+        extra = ('Sarah','Bob','Kate','Tom','Brian')[i%5]
+        file_name = f"Image_File_{i:04}_{extra}.jpg" if i!=63 else "Duck_Species_Brenda.csv"
+        filetype = file_name.split('.')[-1].upper()
+        size = 100 + ((123*(i%5)) +(5*(i%11)))
+        day = 1+ (i%23)
+        month =  4+ ((i//100)%5)
+        row = [file_name, f"{day:02}/{month:02}/202{3 if i==54 else 6} 02:44", f"{filetype} File", f"{size} {'MB' if i in [109,9,99] else 'KB' }"]
+        rows.append(row)
+    fileinfo_df = pd.DataFrame(columns=["Name", "Date Modified", "Type", "Size"], data = rows)
+    return fileinfo_df      
+      
+
+short_text = 'The quick brown fox jumps over the lazy dog.'
+
+text = """It was the best of times, it was the worst of times, it was the age 
+of wisdom, it was the age of foolishness, it was the epoch of belief, it was 
+the epoch of incredulity, it was the season of Light, it was the season of 
+Darkness, it was the spring of hope, it was the winter of despair, we had 
+everything before us, we had nothing before us, we were all going direct to 
+Heaven, we were all going direct the other way—in short, the period was so far 
+like the present period, that some of its noisiest authorities insisted on its 
+being received, for good or for evil, in the superlative degree of comparison 
+only.""".replace('\\n','')
+
+
+long_text = """THE BOY WHO LIVED
+r. and Mrs. Dursley, of number four, Privet Drive, were proud to say
+that they were perfectly normal, thank you very much. They were the
+last people you’d expect to be involved in anything strange or mysterious,
+because they just didn’t hold with such nonsense.
+Mr. Dursley was the director of a firm called Grunnings, which made drills.
+He was a big, beefy man with hardly any neck, although he did have a very
+large mustache. Mrs. Dursley was thin and blonde and had nearly twice the
+usual amount of neck, which came in very useful as she spent so much of her
+time craning over garden fences, spying on the neighbors. The Dursleys had a
+small son called Dudley and in their opinion there was no finer boy anywhere.
+The Dursleys had everything they wanted, but they also had a secret, and
+their greatest fear was that somebody would discover it. They didn’t think
+they could bear it if anyone found out about the Potters. Mrs. Potter was Mrs.
+Dursley’s sister, but they hadn’t met for several years; in fact, Mrs. Dursley
+pretended she didn’t have a sister, because her sister and her good-for-nothing
+husband were as unDursleyish as it was possible to be. The Dursleys
+shuddered to think what the neighbors would say if the Potters arrived in the
+street. The Dursleys knew that the Potters had a small son, too, but they had
+never even seen him. This boy was another good reason for keeping the
+Potters away; they didn’t want Dudley mixing with a child like that.
+When Mr. and Mrs. Dursley woke up on the dull, gray Tuesday our story
+starts, there was nothing about the cloudy sky outside to suggest that strange
+and mysterious things would soon be happening all over the country. Mr.
+Dursley hummed as he picked out his most boring tie for work, and Mrs.
+Dursley gossiped away happily as she wrestled a screaming Dudley into his
+high chair.
+None of them noticed a large, tawny owl flutter past the window.
+At half past eight, Mr. Dursley picked up his briefcase, pecked Mrs.
+Dursley on the cheek, and tried to kiss Dudley good-bye but missed, because
+Dudley was now having a tantrum and throwing his cereal at the walls. “Little
+tyke,” chortled Mr. Dursley as he left the house. He got into his car and
+backed out of number four’s drive.
+It was on the corner of the street that he noticed the first sign of something
+peculiar — a cat reading a map. For a second, Mr. Dursley didn’t realize what
+he had seen — then he jerked his head around to look again. There was a
+tabby cat standing on the corner of Privet Drive, but there wasn’t a map in
+sight. What could he have been thinking of? It must have been a trick of the
+light. Mr. Dursley blinked and stared at the cat. It stared back. As Mr. Dursley
+drove around the corner and up the road, he watched the cat in his mirror. It
+was now reading the sign that said Privet Drive — no, looking at the sign;
+cats couldn’t read maps or signs. Mr. Dursley gave himself a little shake and
+put the cat out of his mind. As he drove toward town he thought of nothing
+except a large order of drills he was hoping to get that day.
+But on the edge of town, drills were driven out of his mind by something
+else. As he sat in the usual morning traffic jam, he couldn’t help noticing that
+there seemed to be a lot of strangely dressed people about. People in cloaks.
+Mr. Dursley couldn’t bear people who dressed in funny clothes — the getups
+you saw on young people! He supposed this was some stupid new fashion. He
+drummed his fingers on the steering wheel and his eyes fell on a huddle of
+these weirdos standing quite close by. They were whispering excitedly
+together. Mr. Dursley was enraged to see that a couple of them weren’t young
+at all; why, that man had to be older than he was, and wearing an emerald-
+green cloak! The nerve of him! But then it struck Mr. Dursley that this was
+probably some silly stunt — these people were obviously collecting for
+something . . . yes, that would be it. The traffic moved on and a few minutes
+later, Mr. Dursley arrived in the Grunnings parking lot, his mind back on
+drills.
+Mr. Dursley always sat with his back to the window in his office on the
+ninth floor. If he hadn’t, he might have found it harder to concentrate on drills
+that morning. He didn’t see the owls swooping past in broad daylight, though
+people down in the street did; they pointed and gazed open-mouthed as owl
+after owl sped overhead. Most of them had never seen an owl even at
+nighttime. Mr. Dursley, however, had a perfectly normal, owl-free morning.
+He yelled at five different people. He made several important telephone calls
+and shouted a bit more. He was in a very good mood until lunchtime, when he
+thought he’d stretch his legs and walk across the road to buy himself a bun
+from the bakery.
+He’d forgotten all about the people in cloaks until he passed a group of
+them next to the baker’s. He eyed them angrily as he passed. He didn’t know
+why, but they made him uneasy. This bunch were whispering excitedly, too,
+and he couldn’t see a single collecting tin. It was on his way back past them,
+clutching a large doughnut in a bag, that he caught a few words of what they
+were saying.
+“The Potters, that’s right, that’s what I heard —”
+“— yes, their son, Harry —”
+Mr. Dursley stopped dead. Fear flooded him. He looked back at the
+whisperers as if he wanted to say something to them, but thought better of it.
+He dashed back across the road, hurried up to his office, snapped at his
+secretary not to disturb him, seized his telephone, and had almost finished
+dialing his home number when he changed his mind. He put the receiver back
+down and stroked his mustache, thinking . . . no, he was being stupid. Potter
+wasn’t such an unusual name. He was sure there were lots of people called
+Potter who had a son called Harry. Come to think of it, he wasn’t even sure
+his nephew was called Harry. He’d never even seen the boy. It might have
+been Harvey. Or Harold. There was no point in worrying Mrs. Dursley; she
+always got so upset at any mention of her sister. He didn’t blame her — if
+he’d had a sister like that . . . but all the same, those people in cloaks . . .
+He found it a lot harder to concentrate on drills that afternoon and when he
+left the building at five o’clock, he was still so worried that he walked straight
+into someone just outside the door.
+“Sorry,” he grunted, as the tiny old man stumbled and almost fell. It was a
+few seconds before Mr. Dursley realized that the man was wearing a violet
+cloak. He didn’t seem at all upset at being almost knocked to the ground. On
+the contrary, his face split into a wide smile and he said in a squeaky voice
+that made passersby stare, “Don’t be sorry, my dear sir, for nothing could
+upset me today! Rejoice, for You-Know-Who has gone at last! Even Muggles
+like yourself should be celebrating, this happy, happy day!”
+And the old man hugged Mr. Dursley around the middle and walked off.
+Mr. Dursley stood rooted to the spot. He had been hugged by a complete
+stranger. He also thought he had been called a Muggle, whatever that was. He
+was rattled. He hurried to his car and set off for home, hoping he was
+imagining things, which he had never hoped before, because he didn’t
+approve of imagination.
+As he pulled into the driveway of number four, the first thing he saw —
+and it didn’t improve his mood — was the tabby cat he’d spotted that
+morning. It was now sitting on his garden wall. He was sure it was the same
+one; it had the same markings around its eyes.
+“Shoo!” said Mr. Dursley loudly.
+The cat didn’t move. It just gave him a stern look. Was this normal cat
+behavior? Mr. Dursley wondered. Trying to pull himself together, he let
+himself into the house. He was still determined not to mention anything to his
+wife.
+Mrs. Dursley had had a nice, normal day. She told him over dinner all
+about Mrs. Next Door’s problems with her daughter and how Dudley had
+learned a new word (“Won’t!”). Mr. Dursley tried to act normally. When
+Dudley had been put to bed, he went into the living room in time to catch the
+last report on the evening news:
+“And finally, bird-watchers everywhere have reported that the nation’s
+owls have been behaving very unusually today. Although owls normally hunt
+at night and are hardly ever seen in daylight, there have been hundreds of
+sightings of these birds flying in every direction since sunrise. Experts are
+unable to explain why the owls have suddenly changed their sleeping
+pattern.” The newscaster allowed himself a grin. “Most mysterious. And now,
+over to Jim McGuffin with the weather. Going to be any more showers of
+owls tonight, Jim?”
+“Well, Ted,” said the weatherman, “I don’t know about that, but it’s not
+only the owls that have been acting oddly today. Viewers as far apart as Kent,
+Yorkshire, and Dundee have been phoning in to tell me that instead of the rain
+I promised yesterday, they’ve had a downpour of shooting stars! Perhaps
+people have been celebrating Bonfire Night early — it’s not until next week,
+folks! But I can promise a wet night tonight.”
+Mr. Dursley sat frozen in his armchair. Shooting stars all over Britain?
+Owls flying by daylight? Mysterious people in cloaks all over the place? And
+a whisper, a whisper about the Potters . . .
+Mrs. Dursley came into the living room carrying two cups of tea. It was no
+good. He’d have to say something to her. He cleared his throat nervously. “Er
+— Petunia, dear — you haven’t heard from your sister lately, have you?”
+As he had expected, Mrs. Dursley looked shocked and angry. After all, they
+normally pretended she didn’t have a sister.
+“No,” she said sharply. “Why?”
+“Funny stuff on the news,” Mr. Dursley mumbled. “Owls . . . shooting
+stars . . . and there were a lot of funny-looking people in town today . . .”
+“So?” snapped Mrs. Dursley.
+“Well, I just thought . . . maybe . . . it was something to do with . . . you
+know . . . her crowd.”
+Mrs. Dursley sipped her tea through pursed lips. Mr. Dursley wondered
+whether he dared tell her he’d heard the name “Potter.” He decided he didn’t
+dare. Instead he said, as casually as he could, “Their son — he’d be about
+Dudley’s age now, wouldn’t he?”
+“I suppose so,” said Mrs. Dursley stiffly.
+“What’s his name again? Howard, isn’t it?”
+“Harry. Nasty, common name, if you ask me.”
+“Oh, yes,” said Mr. Dursley, his heart sinking horribly. “Yes, I quite agree.”
+He didn’t say another word on the subject as they went upstairs to bed.
+While Mrs. Dursley was in the bathroom, Mr. Dursley crept to the bedroom
+window and peered down into the front garden. The cat was still there. It was
+staring down Privet Drive as though it were waiting for something.
+Was he imagining things? Could all this have anything to do with the
+Potters? If it did . . . if it got out that they were related to a pair of — well, he
+didn’t think he could bear it.
+The Dursleys got into bed. Mrs. Dursley fell asleep quickly but Mr. Dursley
+lay awake, turning it all over in his mind. His last, comforting thought before
+he fell asleep was that even if the Potters were involved, there was no reason
+for them to come near him and Mrs. Dursley. The Potters knew very well
+what he and Petunia thought about them and their kind. . . . He couldn’t see
+how he and Petunia could get mixed up in anything that might be going on —
+he yawned and turned over — it couldn’t affect them. . . .
+How very wrong he was.
+Mr. Dursley might have been drifting into an uneasy sleep, but the cat on
+the wall outside was showing no sign of sleepiness. It was sitting as still as a
+statue, its eyes fixed unblinkingly on the far corner of Privet Drive. It didn’t
+so much as quiver when a car door slammed on the next street, nor when two
+owls swooped overhead. In fact, it was nearly midnight before the cat moved
+at all.
+A man appeared on the corner the cat had been watching, appeared so
+suddenly and silently you’d have thought he’d just popped out of the ground.
+The cat’s tail twitched and its eyes narrowed.
+Nothing like this man had ever been seen on Privet Drive. He was tall, thin,
+and very old, judging by the silver of his hair and beard, which were both
+long enough to tuck into his belt. He was wearing long robes, a purple cloak
+that swept the ground, and high-heeled, buckled boots. His blue eyes were
+light, bright, and sparkling behind half-moon spectacles and his nose was very
+long and crooked, as though it had been broken at least twice. This man’s
+name was Albus Dumbledore.
+Albus Dumbledore didn’t seem to realize that he had just arrived in a street
+where everything from his name to his boots was unwelcome. He was busy
+rummaging in his cloak, looking for something. But he did seem to realize he
+was being watched, because he looked up suddenly at the cat, which was still
+staring at him from the other end of the street. For some reason, the sight of
+the cat seemed to amuse him. He chuckled and muttered, “I should have
+known.”
+He found what he was looking for in his inside pocket. It seemed to be a
+silver cigarette lighter. He flicked it open, held it up in the air, and clicked it.
+The nearest street lamp went out with a little pop. He clicked it again — the
+next lamp flickered into darkness. Twelve times he clicked the Put-Outer,
+until the only lights left on the whole street were two tiny pinpricks in the
+distance, which were the eyes of the cat watching him. If anyone looked out
+of their window now, even beady-eyed Mrs. Dursley, they wouldn’t be able to
+see anything that was happening down on the pavement. Dumbledore slipped
+the Put-Outer back inside his cloak and set off down the street toward number
+four, where he sat down on the wall next to the cat. He didn’t look at it, but
+after a moment he spoke to it.
+“Fancy seeing you here, Professor McGonagall.”
+He turned to smile at the tabby, but it had gone. Instead he was smiling at a
+rather severe-looking woman who was wearing square glasses exactly the
+shape of the markings the cat had had around its eyes. She, too, was wearing a
+cloak, an emerald one. Her black hair was drawn into a tight bun. She looked
+distinctly ruffled.
+“How did you know it was me?” she asked.
+“My dear Professor, I’ve never seen a cat sit so stiffly.”
+“You’d be stiff if you’d been sitting on a brick wall all day,” said Professor
+McGonagall.
+“All day? When you could have been celebrating? I must have passed a
+dozen feasts and parties on my way here.”
+Professor McGonagall sniffed angrily.
+“Oh yes, everyone’s celebrating, all right,” she said impatiently. “You’d
+think they’d be a bit more careful, but no — even the Muggles have noticed
+something’s going on. It was on their news.” She jerked her head back at the
+Dursleys’ dark living-room window. “I heard it. Flocks of owls . . . shooting
+stars. . . . Well, they’re not completely stupid. They were bound to notice
+something. Shooting stars down in Kent — I’ll bet that was Dedalus Diggle.
+He never had much sense.”
+“You can’t blame them,” said Dumbledore gently. “We’ve had precious
+little to celebrate for eleven years.”
+“I know that,” said Professor McGonagall irritably. “But that’s no reason to
+lose our heads. People are being downright careless, out on the streets in
+broad daylight, not even dressed in Muggle clothes, swapping rumors.”
+She threw a sharp, sideways glance at Dumbledore here, as though hoping
+he was going to tell her something, but he didn’t, so she went on. “A fine
+thing it would be if, on the very day You-Know-Who seems to have
+disappeared at last, the Muggles found out about us all. I suppose he really
+has gone, Dumbledore?”
+“It certainly seems so,” said Dumbledore. “We have much to be thankful
+for. Would you care for a lemon drop?”
+“A what?”
+“A lemon drop. They’re a kind of Muggle sweet I’m rather fond of.”
+“No, thank you,” said Professor McGonagall coldly, as though she didn’t
+think this was the moment for lemon drops. “As I say, even if You-Know-
+Who has gone —”"""
+
+
+
+def func_nth_prime(e):
+    #nth_prime
+    primes = []
+    counter = 1
+    while True:
+        counter +=1
+        for prime in primes:
+            if counter%prime==0:
+                break
+        else:
+            primes.append(counter)
+        if len(primes)==e:
+            return primes[-1]
+
+def generator_prime_numbers():
+    '''
+        for i,n in enumerate(generator_prime_numbers()):
+            print(i,n)
+            if i==20:
+               break
+    '''
+    #nth_prime
+    yield 2
+    primes = []
+    counter = 1
+    while True:
+        counter +=2
+        for prime in primes:
+            if counter%prime==0:
+                break
+        else:
+            primes.append(counter)
+            yield counter
+
+
+
 image = __create_image()
 film_df = __create_dataframe()
 country_df = __create_dataframe2()
+pokemon_df = __create_dataframe3()
+func = func_nth_prime
+fileinfo_df = create_fileinfo_df(1234)
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+
 
 
