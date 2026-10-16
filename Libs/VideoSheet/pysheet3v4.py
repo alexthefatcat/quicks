@@ -317,7 +317,8 @@ class VideoSheet:
     def __init__(self):
         self.infos = []
     
-    def create(self,filepath_in, folder_out):
+    def create(self,filepath_in, folder_out, overwrite=True):
+        self.overwrite = overwrite
         global sheet, video, vsheet
         
         self.video = Video(filepath_in)
@@ -338,14 +339,26 @@ class VideoSheet:
         
     def _save(self,filepath_in, folder_out, vsheet, mdata=None):
         
-        global fnn,  filepath_in_folder, folder 
-        
         filepath_dir, filename = os.path.split(filepath_in)
-        _,filepath_in_folder = os.path.split(filepath_dir)  
-        filename_vs = filename.rsplit('.',1)[0] + '.vs.jpg'
+        _,filepath_in_folder = os.path.split(filepath_dir)
+        filename_vs_parts = [filename.rsplit('.',1)[0],'','.vs.jpg']
+        filename_vs = ''.join(filename_vs_parts) 
+        filepath_vs = os.path.join(folder_out, filename_vs)
+        
+        if not self.overwrite:
+            if os.path.exists(filepath_vs):
+                for i in range(1, 3000):
+                    filename_vs_parts[1] = f'({i})'
+                    filename_vs = ''.join(filename_vs_parts) 
+                    filepath_vs = os.path.join(folder_out, filename_vs)                    
+                    if not os.path.exists(filepath_vs):
+                        break
+                else:
+                    raise f'BLOCKED SAVEING TOO MANY SIMILAR FILES EXIST Tried 30 filenames alst one being {filepath_vs}'
 
 
-        self.filename_videosheet_out = os.path.join(folder_out, filename_vs)
+
+        self.filename_videosheet_out = filepath_vs
         
         if mdata is None:
             mdata = False # function then just saves normally

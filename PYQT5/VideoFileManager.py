@@ -58,7 +58,7 @@ import pandas as pd
 from quick_pandas import update_database
 
 
-def custom_row_function(row):
+def create_search_column__function(row):
     def duration_func(out):
         foo = out.split(':')
         foo2 = (int(foo[0])*60)+(int(foo[1]))
@@ -90,7 +90,7 @@ df_database =  update_database('pyvideo_film_info.csv')
 actress = ['Roxy Bell', 'Reona Kirishamia','Nina James',None,'Mini Diva', 'Little Caprice', 'Bella Brookz', 'Bella Brookz','Roxy Bell','Roxy Bell','Roxy Bell','Alice','Alice','Alice','Alice','Alice',]
 df_database['Actress'] = actress
 del actress
-df_database['Search'] = df_database.apply(custom_row_function, axis=1)
+df_database['Search'] = df_database.apply(create_search_column__function, axis=1)
 
 
 

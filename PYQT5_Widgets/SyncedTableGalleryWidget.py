@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import QSplitter, QTableWidget, QHBoxLayout, QScrollBar,  Q
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5.QtGui import  QPainterPath, QLinearGradient
 from PyQt5.QtGui import QPixmap, QIcon, QColor, QPainter, QPen
-
+from PyQt5.QtCore import QTimer
 
 import math
 from PyQt5.QtCore import QRectF, QPointF
@@ -33,11 +33,29 @@ from PyQt5.QtCore import QRectF, QPointF
 
 
 import pandas as pd
+from pandas.api.types import is_string_dtype, is_numeric_dtype
 
 
-print_debug = lambda *args, **kwargs:print(*args, **kwargs) if DEBUG else None
+def print_debug(*args,**kwargs):
+    if DEBUG:
+        args = list(args)+['#* print_debug']
+        print(*args, **kwargs)
+
+
+
+
 
 DEBUG = True
+
+
+
+debug_tl = False # travel laptop
+# fixes black line
+
+
+
+
+
 
 
 
@@ -47,10 +65,11 @@ DEBUG = True
         
 class LineOverlay(QWidget):
     """A transparent overlay widget that paints horizontal lines synchronized with scrolling."""
-    def __init__(self, target_list_widget, parent=None):
+    def __init__(self, target_list_widget, parent=None, top_hidden=0):
         super().__init__(parent)
         self.parent = parent
         self.list_widget = target_list_widget
+        self.top_hidden = top_hidden
         
         # Pass-through mouse clicks to underlying widgets
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
@@ -80,9 +99,11 @@ class LineOverlay(QWidget):
             v = (n * row_height) + offset - scroll_y
             
             # Only draw lines currently visible inside the viewport frame
-            if 0 <= v <= self.height():
+            if self.top_hidden <= v <= self.height():
                 painter.drawLine(0, v, full_width, v)
-
+        if False:
+            painter.drawLine(0, self.top_hidden, full_width, self.top_hidden)
+                    
         painter.end()
 
 def chunk_by_size(items: list, chunk_size: int = 6) -> list[list]:
@@ -253,15 +274,9 @@ class StarRating(QWidget):
             self._rating = rating
             self.ratingChanged.emit(self._rating)
             self.update()
-
-
-
-
-
-
-
-
-
+    
+    def __str__(self):
+        return str(self.rating())
 
 
 
@@ -284,6 +299,8 @@ class SyncedTableGallery(QWidget):
     def __init__(self, parent=None, df=None, ListWidget=None, TableWidget=None, fixed_no_images=6):
         super().__init__(parent)
         self.LIST_ROW_HEIGHT = 22
+        if debug_tl:
+            self.LIST_ROW_HEIGHT = 35
         self.fixed_no_images = fixed_no_images # if None expands when explanding
         
         self.df = df
@@ -295,21 +312,47 @@ class SyncedTableGallery(QWidget):
         self.ListWidget = QListWidget if ListWidget is None else ListWidget
         self.TableWidget = QTableWidget if TableWidget is None else TableWidget
 
+        self._is_syncing = False
         self.init_table()
         self.init_gridlist()
+
         self.init_ui()
         self.create_default_icon()
         
         self.sync_scrolling_two_widgets()        
-        self.refresh_view
         self.reset_grid_item_sizes()
         self.sort_func_dict = {}
 
         self.star_changes = []
+        if True:
+            QTimer.singleShot(0, self.__init__post)
+        else:
+            self.refresh_view()
+    
+            # Create overlay attached to grid_list
+            top_hidden = 0
+            if debug_tl:
+                top_hidden=37
+            self.line_overlay = LineOverlay(target_list_widget=self.gridlist, parent=self, top_hidden=top_hidden)
+    
+            def _on_grid_resize(event):
+                # Call original resize event
+                super(type(self.gridlist), self.gridlist).resizeEvent(event)
+                # Stretch overlay over the entire grid area
+                self.line_overlay.setGeometry(self.rect())    
+            
+    
+            # Keep overlay dimensions synced with grid_list viewport
+            self.gridlist.resizeEvent = _on_grid_resize
+            
+    def __init__post(self):#not working
         self.refresh_view()
 
         # Create overlay attached to grid_list
-        self.line_overlay = LineOverlay(target_list_widget=self.gridlist, parent=self)
+        top_hidden = 0
+        if debug_tl:
+            top_hidden=37
+        self.line_overlay = LineOverlay(target_list_widget=self.gridlist, parent=self, top_hidden=top_hidden)
 
         def _on_grid_resize(event):
             # Call original resize event
@@ -320,7 +363,10 @@ class SyncedTableGallery(QWidget):
 
         # Keep overlay dimensions synced with grid_list viewport
         self.gridlist.resizeEvent = _on_grid_resize
-        
+
+
+
+
 
 
     @property
@@ -345,7 +391,17 @@ class SyncedTableGallery(QWidget):
         self.gridlist.setMovement(QListWidget.Static)
         self.gridlist.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.gridlist.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.gridlist.setStyleSheet(" QListWidget::item { border:none; padding-top: 18px}")  
+        self.gridlist.setStyleSheet(" QListWidget::item { border:none; padding-top: 18px}")
+        self.gridlist.currentItemChanged.connect(self.on_grid_selection_changed)
+        
+        # Add this where self.gridlist is initialized (e.g., in __init__)
+        self.gridlist.setStyleSheet("""
+            QListWidget::item:selected {
+                color: #000000;             /* Keeps the text black when selected */
+                background-color: #e0e0e0;  /* Light grey highlight (or set 'transparent') */
+            }
+            QListWidget::item:selected:has-focus {  color: #000000; }""")
+
 
         #self.gridlist.setStyleSheet(" QListWidget::item { border-top: 1px solid lightgray;padding-top: 18px;}")  
 
@@ -512,7 +568,8 @@ class SyncedTableGallery(QWidget):
         self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         
         self.table.horizontalHeader().setSectionsClickable(True)
-        self.table.horizontalHeader().sectionClicked.connect(self.table_column_sort)        
+        self.table.horizontalHeader().sectionClicked.connect(self.table_column_sort)
+        self.table.itemSelectionChanged.connect(self.on_table_selection_changed)        
       
     def init_ui(self):
         layout = QHBoxLayout(self)
@@ -521,7 +578,14 @@ class SyncedTableGallery(QWidget):
         self.splitter.addWidget(self.table)
 
         # to add spacing at the top of grid to be same as list
-        column_header_height_debug = 23
+        # Height of the entire horizontal header
+        if False:#both zero
+            self.table.horizontalHeader().updateGeometry()
+            header_height = self.table.horizontalHeader().sizeHint().height()
+            
+        self.column_header_height_debug = 23
+        if debug_tl:
+            self.column_header_height_debug = 36          
         self.right_container = QWidget()
         self.right_layout = QHBoxLayout()
         self.scrollbar = QScrollBar()       
@@ -531,7 +595,7 @@ class SyncedTableGallery(QWidget):
         self.right_layout.addWidget(self.scrollbar)           
         
        
-        self.right_layout.setContentsMargins(0, column_header_height_debug, 0, 0)        
+        self.right_layout.setContentsMargins(0, self.column_header_height_debug, 0, 0)        
         self.right_container.setLayout(self.right_layout)
         
         
@@ -539,13 +603,73 @@ class SyncedTableGallery(QWidget):
 
         layout.addWidget(self.splitter)
         
-  
-        
+
+    def on_grid_selection_changed(self):
+        """Grid selection updates Table row (mouse or keyboard)."""
+        if self._is_syncing:
+            return
+        print('Chaning')
+    
+        current_item = self.gridlist.currentItem()
+        if current_item:
+            data = current_item.data(Qt.UserRole)
+            if data and "id" in data:
+                row_idx = data["id"]
+                if row_idx < self.table.rowCount():
+                    self.sync_widgets(row_idx, source='grid')
+    
+    
+    def on_table_selection_changed(self):
+        """Table selection updates Grid item (mouse or keyboard)."""
+        if self._is_syncing:
+            return
+    
+        current_row = self.table.currentRow()
+        if 0 <= current_row < self.gridlist.count():
+            self.sync_widgets(current_row, source='table')
+    
+    
+    # def changed_item(self, row_idx):
+    #     """Override in subclasses; receives integer row_idx consistently."""
+    #     pass
+    
+    def changed_item(self, row_idx):
+        print(row_idx)
+        pass    
+    
+    
+    def sync_widgets(self, row_idx, source):
+        """Centralized synchronization handler taking integer row_idx."""
+        self._is_syncing = True
+        try:
+            if source == 'table':
+                grid_item = self.gridlist.item(row_idx)
+                if grid_item:
+                    self.gridlist.setCurrentItem(grid_item)
+                    self.gridlist.scrollToItem(grid_item)
+                    
+            elif source == 'grid':
+                self.table.selectRow(row_idx)
+                for col in range(self.table.columnCount()):
+                    table_item = self.table.item(row_idx, col)
+                    if table_item:
+                        self.table.scrollToItem(table_item)
+                        break
+    
+            # Always receives an integer row_idx regardless of source
+            self.changed_item(row_idx)
+            
+        finally:
+            self._is_syncing = False    
+            
+            
         
     
     def refresh_view(self):
         self.table.clear()
+        self.table.clearSpans()
         self.gridlist.clear()
+        
         
         df_view = self.df_view
         
@@ -597,12 +721,52 @@ class SyncedTableGallery(QWidget):
                 counter +=1                
                 item = self.modify_grid_item(item)                
                 self.gridlist.addItem(item)
+        print(f'    Refesh View, Total Rows = {total_items}<<')             
     
 
 
 
         for row in range(total_items, total_items_incl_buffer):
             self.create_blank_row(row)
+
+
+
+        if False:
+            self.table.verticalScrollBar().blockSignals(True)
+            self.gridlist.verticalScrollBar().blockSignals(True)
+    
+            # Force geometry updates so ranges recalculate properly
+
+    
+            # Reset scroll positions back to top safely
+
+    
+            # Re-enable signals
+            self.table.verticalScrollBar().blockSignals(False)
+            self.gridlist.verticalScrollBar().blockSignals(False)
+    
+    
+  
+
+    def refresh_view22(self):
+        scrollbar1 = self.gridlist.verticalScrollBar()
+        scrollbar2 = self.table.verticalScrollBar()    
+        scrollbar1.blockSignals(True)
+        scrollbar2.blockSignals(True)
+        self.refresh_view2()
+        self.table.updateGeometry()
+        self.table.viewport().update()
+        self.gridlist.updateGeometry()
+        self.gridlist.viewport().update()        
+        self.table.verticalScrollBar().setValue(0)
+        self.gridlist.verticalScrollBar().setValue(0)        
+        scrollbar1.blockSignals(False)
+        scrollbar2.blockSignals(False)
+
+
+
+
+              
 
 
     def on_rating_changed(self, col, row, new_rating):
@@ -757,21 +921,34 @@ class SyncedTableGallery(QWidget):
         
         df = self.df
         col_name = df.columns[self.table_column_sort_column] 
-        sort_series = df[col_name].str.lower()
+
         ascending = self.table_column_sort_ascending
         
-        if False:
-            if self.sort_col == 1:
-                sort_series = pd.to_datetime(df[col_name], format="%d/%m/%Y %H:%M")
+        
+        if is_string_dtype(df[col_name]):
+            print_debug(f'   Sort by {col_name} which IS sting')
     
-            if 'size' in col_name.lower():
-                print('Sort by size')
-                sort_series = df[col_name].str.replace(" KB", "", regex=False).astype(int)
-
-        print(f'Filtering Column, sort_func_dict {list(self.sort_func_dict.keys())}')
-        if col_name in self.sort_func_dict:
-            func = self.sort_func_dict[col_name]
-            sort_series = self.df[col_name].apply(func)
+            sort_series = df[col_name].str.lower()        
+            
+            
+            if False:
+                if self.sort_col == 1:
+                    sort_series = pd.to_datetime(df[col_name], format="%d/%m/%Y %H:%M")
+        
+                # if 'size' in col_name.lower():
+                    print('Sort by size')
+                    sort_series = df[col_name].str.replace(" KB", "", regex=False).astype(int)
+    
+            print(f'Filtering Column, sort_func_dict {list(self.sort_func_dict.keys())}')
+            if col_name in self.sort_func_dict:
+                func = self.sort_func_dict[col_name]
+                sort_series = self.df[col_name].apply(func)
+                
+        if is_numeric_dtype(df[col_name]): 
+            print_debug(f'   Sort by {col_name} which is NOT sting')               
+            sort_series = -df[col_name].fillna(0)               
+                
+                
 
         df = self.df[[col_name]].sort_values(by=col_name, key= lambda _: sort_series, ascending=ascending )
         self.index__sorting_mask = self.index__sorting_mask.loc[df.index]
@@ -785,4 +962,47 @@ class SyncedTableGallery(QWidget):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#from pandas.api.types import is_string_dtype, is_numeric_dtype
+
+# j = df_database['Ratings'].dtype
+
+# .str.lower()
+
+# f = df_database['File Name'].dtype
+
+
+# jjj = j.apply(str)
+# np.dtype('O')
+
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

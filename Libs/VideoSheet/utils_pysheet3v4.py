@@ -66,14 +66,27 @@ def tryify(func,default=None,args=None,kwargs=None):
 
 def ImageConcat(images, border=3, color=colors.black, get_middle_image_ltrb=False):
     row0, col0 = images[0], [img[0] for img in images]
-    nimgs = [len(row0), len(col0)]
+    nimgs = [len(row0), len(col0)] # width, height
     heights, widths = [img.height for img in col0 ], [img.width  for img in row0 ]
     *heights, hieght = accumulate([e+border for e in [0]+heights])
     *widths, width = accumulate([e+border for e in [0]+widths]) 
     if get_middle_image_ltrb:
         from math import floor
         locs = floor(nimgs[0]/2), floor(nimgs[1]/2)
-        middle_image_ltrb = [widths[locs[1]], heights[locs[0]], widths[locs[1]+1]-border, heights[locs[0]+1]-border,]
+        
+        
+        
+        try:
+            #print(f'locs,widths,heights,nimgs = [{locs},{widths},{heights},{nimgs}]')
+            #middle_image_ltrb = [widths[locs[1]], heights[locs[0]], widths[locs[1]+1]-border, heights[locs[0]+1]-border,]        
+            middle_image_ltrb = [widths[locs[0]], heights[locs[1]], widths[locs[0]+1]-border, heights[locs[1]+1]-border,]
+        except IndexError:
+            # Re-raising it as a different error type, or with a custom message
+            raise ValueError("Cant find middle Image I susspect the video is short and fewer frames exist (IndexError) line 85 of utils_pysheet3v4")
+    
+    
+            
+        
         # out2 = out.crop(index)
     
     out = Image.new(images[0][0].mode, (width, hieght),color)
@@ -217,9 +230,19 @@ def py_filepath_info(check=True):
     return out
 
 
-
-
 def save_pil_image_with_metadata(filepath, img_pil, mdata_str, user_comment_tag_ifd = 37510):
+    if mdata_str is None:
+        img_pil.save(filepath)
+    else:
+        exif = img_pil.getexif() 
+        if not mdata_str.isascii():
+            exif[user_comment_tag_ifd] = b"UNICODE\x00" + mdata_str.encode('utf-16')
+        else:
+            exif[user_comment_tag_ifd] = mdata_str
+        img_pil.save(filepath, exif=exif)  
+
+
+def save_pil_image_with_metadata_old(filepath, img_pil, mdata_str, user_comment_tag_ifd = 37510):
     print(filepath, mdata_str, user_comment_tag_ifd,'***<<<***')
     if mdata_str is None:
         img_pil.save(filepath)
@@ -228,7 +251,7 @@ def save_pil_image_with_metadata(filepath, img_pil, mdata_str, user_comment_tag_
         exif[user_comment_tag_ifd] = mdata_str
         img_pil.save(filepath, exif=exif)  
 
-def read_pil_image_with_metadata(filepath, user_comment_tag_ifd = 37510, return_no_metadata=False):
+def read_pil_image_with_metadata_old(filepath, user_comment_tag_ifd = 37510, return_no_metadata=False):
     img_pil = Image.open(filepath, mode='r')
     if return_no_metadata:
         return img_pil
@@ -236,6 +259,38 @@ def read_pil_image_with_metadata(filepath, user_comment_tag_ifd = 37510, return_
     mdata_str = exif[user_comment_tag_ifd]
     return img_pil, mdata_str
  
+
+
+def read_pil_image_with_metadata(filepath, user_comment_tag_ifd = 37510, return_no_metadata=False):
+    img_pil = Image.open(filepath, mode='r')
+    if return_no_metadata:
+        return img_pil
+    exif = img_pil.getexif() 
+    mdata = exif.get(user_comment_tag_ifd)
+    if isinstance(mdata, bytes):
+        if mdata.startswith(b"UNICODE\x00"):
+            mdata_str = mdata[8:].decode('utf-16')
+        elif mdata.startswith(b"ASCII\x00\x00\x00"):
+            mdata_str = mdata[8:].decode('ascii')
+        else:
+            mdata_str = mdata.decode('utf-8', errors='ignore') # Fallback
+    else:
+        mdata_str = mdata
+    return img_pil, mdata_str
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
